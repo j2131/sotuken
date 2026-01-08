@@ -1,4 +1,4 @@
-#pragma once
+#pragma pnce
 
 template <class ThisPtcl> class FileIO{
 	PS::F64 time;
@@ -37,32 +37,7 @@ template <class ThisPtcl> class FileIO{
 		fout.write(reinterpret_cast<const char * const>(&sysinfo), sizeof(system_t));
 		for(std::size_t i = 0 ; i < ptcl.getNumberOfParticleLocal() ; ++ i){
 			const ThisPtcl& ith = ptcl[i];
-#pragma once
-
-template <class ThisPtcl> class FileIO{
-        PS::F64 time;
-        PS::S64 step;
-        public:
-        FileIO(): time(0.0), step(0){
-        }
-        void OutputFileWithTimeInterval(PS::ParticleSystem<ThisPtcl>& ptcl, const system_t& sysinfo){
-                const int NumberOfSnapshot = sysinfo.end_time * 60;//60 frames per sec
-                if(sysinfo.time >= time){
-                        FileHeader header;
-                        header.time = sysinfo.time;
-                        header.Nbody = ptcl.getNumberOfParticleLocal();
-                        char filename[256];
-                        sprintf(filename, "result/%05d", step);
-                        ptcl.writeParticleAscii(filename, "%s_%05d_%05d.dat", header);
-                        if(PS::Comm::getRank() == 0){
-                                std::cerr << "output " << filename << "." << std::endl;
-                        }
-                        //std::cout << time << " " << ptcl[0].pos << " " << ptcl[0].vel << " " << ptcl[0].avel << std::endl;
-                        time += sysinfo.end_time / NumberOfSnapshot;
-                        ++ step;
-                }
-        };
-        //Memento			fout.write((char*)&ith, sizeof(ThisPtcl));
+			fout.write((char*)&ith, sizeof(ThisPtcl));
 		}
 		fout.close();
 		std::cerr << "created Memento file" << std::endl;
