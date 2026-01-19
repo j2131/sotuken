@@ -29,9 +29,9 @@ int main(int argc, char *argv[]) {
         goto savepoint;
     }
 
-    //for (int i = 0; i < ptcl.getNumberOfParticleLocal(); i++) {
-    //    std::cout << "i= " << i << " pos= " << ptcl[i].pos << " vel= " << ptcl[i].vel << std::endl;
-    //}
+    for (int i = 0; i < ptcl.getNumberOfParticleLocal(); i++) {
+        std::cout << "i= " << i << " pos= " << ptcl[i].pos << " rad= " << ptcl[i].rad << " kind= " << ptcl[i].kind << std::endl;
+    }
 
     dinfo.decomposeDomainAll(ptcl);
     ptcl.exchangeParticle(dinfo);

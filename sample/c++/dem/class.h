@@ -68,6 +68,8 @@ class FP{
 	PS::F64vec tor;
 	//radius
 	PS::F64    rad;
+	//kind
+	PS::S32    kind;
 	//timestep
 	PS::F64    dt;
 	//material parameter
@@ -102,7 +104,7 @@ class FP{
 		*this = fp;
 	}
 	void writeAscii(FILE* fp) const{
-		fprintf(fp, "%lld\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n", id, mass, rad, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z, avel.x, avel.y ,avel.z, ang.x, ang.y, ang.z);
+		fprintf(fp, "%lld\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%d\n", id, mass, rad, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z, avel.x, avel.y ,avel.z, ang.x, ang.y, ang.z, kind);
 	}
 	//KDK
 	void kick(const PS::F64 dt){

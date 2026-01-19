@@ -7,7 +7,9 @@ template <class ThisPtcl> class FileIO{
 	FileIO(): time(0.0), step(0){
 	}
 	void OutputFileWithTimeInterval(PS::ParticleSystem<ThisPtcl>& ptcl, const system_t& sysinfo){
-		const int NumberOfSnapshot = sysinfo.end_time * 60;//60 frames per sec
+		//const int NumberOfSnapshot = sysinfo.end_time * 60;//60 frames per sec
+		//const int NumberOfSnapshot = sysinfo.end_time * 600;//600 frames per sec
+		const int NumberOfSnapshot = sysinfo.end_time * 3000;//3000 frames per sec
 		if(sysinfo.time >= time){
 			FileHeader header;
 			header.time = sysinfo.time;
