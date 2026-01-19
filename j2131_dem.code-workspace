@@ -1,0 +1,71 @@
+{
+	"folders": [
+		{
+			"name": "src" "path": "./src",
+			"name": "src" "path": "./sample/c++/dem/",
+		},
+	],
+	"settings": {
+		"C_Cpp.clang_format_path": "/usr/bin/clang-format",
+		"C_Cpp.clang_format_style": "{BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 150, SortIncludes: false}",
+		"C_Cpp.default.compilerArgs": [
+			"-Wall",
+			"-DPARTICLE_SIMULATOR_THREAD_PARALLEL",
+			"-DPARTICLE_SIMULATOR_MPI_PARALLEL",
+			"-DUSE_CUDA",
+			"-DPS_COMPILE_TIME_MESSAGES_ENABLED",
+		],
+		"files.exclude": {
+            "**/bitonic": true, // 追加されたパスにある任意のbitonicというディレクトリを除外
+            "**/c_interface": true,
+            "**/cuda_kernels": true,
+            "**/fortran_interface*": true,
+            "**/particle_mesh": true,
+            "**/phantom_grape_x86": true,
+            "**/phantom_grape_k": true,
+            "**/test_parts": true,
+            "**/org2024*": true,
+	        "**/comp.cpp": true,
+	        "**/comp?.cpp": true,
+	        "**/comp??.cpp": true,
+    	    "**/*~": true,
+        },
+		//"editor.fontSize": 14,
+		//"editor.wordWrap": "off",
+		//"editor.wordWrapColumn": 50,
+	}
+}
+
+//{
+//	"folders": [
+//		{
+//			"path": "."
+//		}
+//	],
+//	"settings": {
+//		"C_Cpp.clang_format_sortIncludes": false,
+//		"C_Cpp.default.compilerArgs": [
+//			"-Wall"
+//		],
+//		"editor.fontSize": 16,
+//		"C_Cpp.clang_format_style": "Google",
+//		"C_Cpp.clang_format_fallbackStyle": "{BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 150, SortIncludes: false}",
+//	}
+//}
+
+//	"configurations": [
+//		{
+//			"name": "Linux",
+//			"includePath": [
+//				"${workspaceFolder}/**",
+//				"/home/masaki/project/git/fdps-devel/src",
+//				"/home/masaki/project/git/fdps-devel/src/particle_mesh_multipole"
+//			],
+//			"defines": [],
+//			"compilerPath": "/usr/bin/gcc",
+//			"cStandard": "c20",
+//			"cppStandard": "c++20",
+//			"intelliSenseMode": "linux-gcc-x64"
+//		}
+//	],
+//	"version": 4
