@@ -5,7 +5,8 @@
 #include "class.h"
 #include "surface.h"
 //#include "init/InfiniteCylinder2.h"
-#include "init/InfiniteCylinder2_vibrating.h"
+//#include "init/InfiniteCylinder2_vibrating.h"
+#include "init/RectangularBox_vibrating.h"
 #include "integral.h"
 #include "io.h"
 
@@ -29,9 +30,9 @@ int main(int argc, char *argv[]) {
         goto savepoint;
     }
 
-    for (int i = 0; i < ptcl.getNumberOfParticleLocal(); i++) {
-        std::cout << "i= " << i << " pos= " << ptcl[i].pos << " rad= " << ptcl[i].rad << " kind= " << ptcl[i].kind << std::endl;
-    }
+    //for (int i = 0; i < ptcl.getNumberOfParticleLocal(); i++) {
+    //    std::cout << "i= " << i << " pos= " << ptcl[i].pos << " rad= " << ptcl[i].rad << " kind= " << ptcl[i].kind << std::endl;
+    //}
 
     dinfo.decomposeDomainAll(ptcl);
     ptcl.exchangeParticle(dinfo);

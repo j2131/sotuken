@@ -13,10 +13,13 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 from matplotlib import animation
 
-# Cylinder size (meters)
-CYL_RADIUS = 0.005   # 0.5 cm
-CYL_LENGTH = 0.05    # 5 cm
-PLOT_MARGIN = 0.002  # 2 mm margin for visibility
+# Rectangular box size (meters)
+BOX_HALF_X = 0.002   # 0.2 cm
+BOX_HALF_Y = 0.025   # 2.5 cm (length 5 cm)
+BOX_HALF_Z = 0.02   # 2.0 cm
+#PLOT_MARGIN = 0.002  # 2 mm margin for visibility
+PLOT_MARGIN = 0.004  # 4 mm margin for visibility
+
 
 def load_dat(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -56,8 +59,9 @@ def main():
     if not files:
         raise SystemExit(f"No .dat files found in {args.result_dir}")
 
-    half_len = CYL_LENGTH * 0.5 + PLOT_MARGIN
-    rad_lim = CYL_RADIUS + PLOT_MARGIN
+    half_x = BOX_HALF_X + PLOT_MARGIN
+    half_y = BOX_HALF_Y + PLOT_MARGIN
+    half_z = BOX_HALF_Z + PLOT_MARGIN
 
     if args.index is not None:
         idx = max(0, min(args.index, len(files) - 1))
@@ -89,14 +93,14 @@ def main():
             ax.set_aspect("equal", adjustable="box")
             ax.set_title(f"t={t:.4f}")
             if args.view == "x":
-                ax.set_xlim(-half_len, half_len)
-                ax.set_ylim(-rad_lim, rad_lim)
+                ax.set_xlim(-half_y, half_y)
+                ax.set_ylim(-half_z, half_z)
             elif args.view == "y":
-                ax.set_xlim(-rad_lim, rad_lim)
-                ax.set_ylim(-rad_lim, rad_lim)
+                ax.set_xlim(-half_x, half_x)
+                ax.set_ylim(-half_z, half_z)
             else:
-                ax.set_xlim(-rad_lim, rad_lim)
-                ax.set_ylim(-half_len, half_len)
+                ax.set_xlim(-half_x, half_x)
+                ax.set_ylim(-half_y, half_y)
         else:
             fig = plt.figure(figsize=(8, 8))
             ax = fig.add_subplot(111, projection="3d")
@@ -106,10 +110,10 @@ def main():
             ax.set_xlabel("x")
             ax.set_ylabel("y")
             ax.set_zlabel("z")
-            # Set bounds to see the whole cylinder area
-            ax.set_xlim(-rad_lim, rad_lim)
-            ax.set_ylim(-half_len, half_len)
-            ax.set_zlim(-rad_lim, rad_lim)
+            # Set bounds to see the whole rectangular box
+            ax.set_xlim(-half_x, half_x)
+            ax.set_ylim(-half_y, half_y)
+            ax.set_zlim(-half_z, half_z)
 
         if args.save:
             plt.savefig(args.save)
@@ -134,14 +138,14 @@ def main():
         ax = fig.add_subplot(111)
         ax.set_aspect("equal", adjustable="box")
         if args.view == "x":
-            ax.set_xlim(-half_len, half_len)
-            ax.set_ylim(-rad_lim, rad_lim)
+            ax.set_xlim(-half_y, half_y)
+            ax.set_ylim(-half_z, half_z)
         elif args.view == "y":
-            ax.set_xlim(-rad_lim, rad_lim)
-            ax.set_ylim(-rad_lim, rad_lim)
+            ax.set_xlim(-half_x, half_x)
+            ax.set_ylim(-half_z, half_z)
         else:
-            ax.set_xlim(-rad_lim, rad_lim)
-            ax.set_ylim(-half_len, half_len)
+            ax.set_xlim(-half_x, half_x)
+            ax.set_ylim(-half_y, half_y)
         if args.view == "x":
             ax.set_xlabel("y")
             ax.set_ylabel("z")
@@ -163,10 +167,10 @@ def main():
         ax.set_xlabel("x")
         ax.set_ylabel("y")
         ax.set_zlabel("z")
-        # Set bounds to see the whole cylinder area
-        ax.set_xlim(-rad_lim, rad_lim)
-        ax.set_ylim(-half_len, half_len)
-        ax.set_zlim(-rad_lim, rad_lim)
+        # Set bounds to see the whole rectangular box
+        ax.set_xlim(-half_x, half_x)
+        ax.set_ylim(-half_y, half_y)
+        ax.set_zlim(-half_z, half_z)
 
     def init():
         if args.mode == "2d":
