@@ -12,7 +12,7 @@
 
 void RemoveParticles(PS::ParticleSystem<FP>& ptcl) {
     // 距離しきい値: 壁からこの距離以上離れていれば削除
-    constexpr PS::F64 kRemoveDistance = 0.002;  // 2 mm
+    constexpr PS::F64 kRemoveDistance = 0.010;  // 10 mm
     std::vector<PS::S32> remove_ids;
     remove_ids.reserve(ptcl.getNumberOfParticleLocal());
     for (int i = 0; i < ptcl.getNumberOfParticleLocal(); ++i) {
