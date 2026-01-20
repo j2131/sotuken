@@ -156,10 +156,6 @@ def main():
             ax.set_xlabel("x")
             ax.set_ylabel("y")
         patches = []
-        for _ in range(len(frames[0][1])):
-            circ = Circle((0.0, 0.0), 0.0, alpha=0.7)
-            ax.add_patch(circ)
-            patches.append(circ)
     else:
         fig = plt.figure(figsize=(8, 8))
         ax = fig.add_subplot(111, projection="3d")
@@ -175,7 +171,8 @@ def main():
     def init():
         if args.mode == "2d":
             for p in patches:
-                p.set_radius(0.0)
+                p.remove()
+            patches.clear()
             return patches
         else:
             scat._offsets3d = ([], [], [])
@@ -191,6 +188,14 @@ def main():
                 xy = pos[:, [0, 2]]
             else:
                 xy = pos[:, 0:2]
+            # Adjust number of patches to current particle count
+            while len(patches) < len(rad):
+                circ = Circle((0.0, 0.0), 0.0, alpha=0.7)
+                ax.add_patch(circ)
+                patches.append(circ)
+            while len(patches) > len(rad):
+                p = patches.pop()
+                p.remove()
             for j, p in enumerate(patches):
                 p.center = (xy[j, 0], xy[j, 1])
                 p.set_radius(rad[j])
