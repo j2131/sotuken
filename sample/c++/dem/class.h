@@ -104,7 +104,7 @@ class FP{
 		*this = fp;
 	}
 	void writeAscii(FILE* fp) const{
-		fprintf(fp, "%lld\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%d\n", id, mass, rad, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z, avel.x, avel.y ,avel.z, ang.x, ang.y, ang.z, kind);
+		fprintf(fp, "%ld\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%d\n", id, mass, rad, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z, avel.x, avel.y ,avel.z, ang.x, ang.y, ang.z, kind);
 	}
 	//KDK
 	void kick(const PS::F64 dt){

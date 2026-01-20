@@ -8,14 +8,14 @@ template <class ThisPtcl> class FileIO{
 	}
 	void OutputFileWithTimeInterval(PS::ParticleSystem<ThisPtcl>& ptcl, const system_t& sysinfo){
 		//const int NumberOfSnapshot = sysinfo.end_time * 60;//60 frames per sec
-		const int NumberOfSnapshot = sysinfo.end_time * 300;//300 frames per sec
-		//const int NumberOfSnapshot = sysinfo.end_time * 3000;//3000 frames per sec
+		//const int NumberOfSnapshot = sysinfo.end_time * 300;//300 frames per sec
+		const int NumberOfSnapshot = sysinfo.end_time * 3000;//3000 frames per sec
 		if(sysinfo.time >= time){
 			FileHeader header;
 			header.time = sysinfo.time;
 			header.Nbody = ptcl.getNumberOfParticleLocal();
 			char filename[256];
-			sprintf(filename, "result/%05d", step);
+			sprintf(filename, "result/%05ld", step);
 			ptcl.writeParticleAscii(filename, "%s_%05d_%05d.dat", header);
 			if(PS::Comm::getRank() == 0){
 				std::cerr << "output " << filename << "." << std::endl;

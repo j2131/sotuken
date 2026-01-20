@@ -10,7 +10,31 @@
 #include "integral.h"
 #include "io.h"
 
-int main(int argc, char *argv[]) {
+void RemoveParticles(PS::ParticleSystem<FP>& ptcl) {
+    // 距離しきい値: 壁からこの距離以上離れていれば削除
+    constexpr PS::F64 kRemoveDistance = 0.002;  // 2 mm
+    std::vector<PS::S32> remove_ids;
+    remove_ids.reserve(ptcl.getNumberOfParticleLocal());
+    for (int i = 0; i < ptcl.getNumberOfParticleLocal(); ++i) {
+        const PS::F64 ax = std::abs(ptcl[i].pos.x) - kBoxHalfX;
+        const PS::F64 ay = std::abs(ptcl[i].pos.y) - kBoxHalfY;
+        const PS::F64 az = std::abs(ptcl[i].pos.z) - kBoxHalfZ;
+        const PS::F64 dx = std::max(ax, 0.0);
+        const PS::F64 dy = std::max(ay, 0.0);
+        const PS::F64 dz = std::max(az, 0.0);
+        // 直方体外側の最短距離（外側にいるときのみ正）
+        const PS::F64 dist_out = std::sqrt(dx * dx + dy * dy + dz * dz);
+        if (dist_out >= kRemoveDistance) {
+            remove_ids.push_back(static_cast<PS::S32>(ptcl[i].id));
+        }
+    }
+
+    if (!remove_ids.empty()) {
+        ptcl.removeParticle(&remove_ids[0], remove_ids.size());
+    }
+}
+
+int main(int argc, char* argv[]) {
     PS::Initialize(argc, argv);
     PS::ParticleSystem<FP> ptcl;
     ptcl.initialize();
@@ -27,12 +51,13 @@ int main(int argc, char *argv[]) {
     } else {
         io.Restore(ptcl, sysinfo);
         tree_coll.initialize(ptcl.getNumberOfParticleLocal(), 0.5, 1, 1);
+        sysinfo.end_time = 10.0;
         goto savepoint;
     }
 
-    //for (int i = 0; i < ptcl.getNumberOfParticleLocal(); i++) {
-    //    std::cout << "i= " << i << " pos= " << ptcl[i].pos << " rad= " << ptcl[i].rad << " kind= " << ptcl[i].kind << std::endl;
-    //}
+    // for (int i = 0; i < ptcl.getNumberOfParticleLocal(); i++) {
+    //     std::cout << "i= " << i << " pos= " << ptcl[i].pos << " rad= " << ptcl[i].rad << " kind= " << ptcl[i].kind << std::endl;
+    // }
 
     dinfo.decomposeDomainAll(ptcl);
     ptcl.exchangeParticle(dinfo);
@@ -60,6 +85,7 @@ int main(int argc, char *argv[]) {
         io.OutputFileWithTimeInterval(ptcl, sysinfo);
         if (sysinfo.step % 10000 == 0) io.Create(ptcl, sysinfo);
     savepoint:;
+        RemoveParticles(ptcl);
     }
 
     PS::Finalize();
