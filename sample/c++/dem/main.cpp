@@ -12,7 +12,7 @@
 
 void RemoveParticles(PS::ParticleSystem<FP>& ptcl) {
     // 距離しきい値: 壁からこの距離以上離れていれば削除
-    constexpr PS::F64 kRemoveDistance = 0.010;  // 10 mm
+    constexpr PS::F64 kRemoveDistance = 0.005;  // 5 mm
     std::vector<PS::S32> remove_ids;
     remove_ids.reserve(ptcl.getNumberOfParticleLocal());
     for (int i = 0; i < ptcl.getNumberOfParticleLocal(); ++i) {
@@ -25,7 +25,7 @@ void RemoveParticles(PS::ParticleSystem<FP>& ptcl) {
         // 直方体外側の最短距離（外側にいるときのみ正）
         const PS::F64 dist_out = std::sqrt(dx * dx + dy * dy + dz * dz);
         if (dist_out >= kRemoveDistance) {
-            remove_ids.push_back(static_cast<PS::S32>(ptcl[i].id));
+            remove_ids.push_back(i);
         }
     }
 

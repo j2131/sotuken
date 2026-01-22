@@ -13,7 +13,7 @@ constexpr PS::F64 kVibrationOmega = 8.0 * M_PI;  // 4 Hz
 // constexpr PS::F64vec kVibrationAmp(0.0, 0.0, kBoxHalfZ*0.1);
 constexpr PS::F64vec kVibrationAmp(0.0, 0.0, 0.0);
 constexpr PS::F64 kBoxVolume = (2.0 * kBoxHalfX) * (2.0 * kBoxHalfY) * (2.0 * kBoxHalfZ);
-constexpr PS::F64 kGravityTiltDeg = 80.0;
+constexpr PS::F64 kGravityTiltDeg = 10.0;
 constexpr PS::F64 kGravityTiltRad = kGravityTiltDeg * M_PI / 180.0;
 }  // namespace
 
@@ -101,7 +101,9 @@ class Problem {
     }
     static void externalForce(PS::ParticleSystem<ThisPtcl>& ptcl, const system_t& sysinfo) {
         // 振動による箱の並進オフセット（時間依存）
-        const PS::F64vec offset = kVibrationAmp * sin(kVibrationOmega * sysinfo.time);
+            const PS::F64vec offset = kVibrationAmp * sin(kVibrationOmega * sysinfo.time);
+            // 振動による箱の並進速度（時間微分）
+            const PS::F64vec vel = kVibrationAmp * kVibrationOmega * cos(kVibrationOmega * sysinfo.time);
         // 箱の基準原点（振動分だけ平行移動）
         const PS::F64vec O = offset;
         // 重力ベクトル（y-z平面で傾斜）
@@ -129,12 +131,12 @@ class Problem {
         const PS::F64vec O_zp = O + PS::F64vec(0.0, 0.0, kBoxHalfZ);
         const PS::F64vec O_zm = O + PS::F64vec(0.0, 0.0, -kBoxHalfZ);
         // 各面の無限平面壁を生成
-        InfinitePlane<ThisPtcl> wall_xp(Test, n_xp, O_xp);
-        InfinitePlane<ThisPtcl> wall_xm(Test, n_xm, O_xm);
-        InfinitePlane<ThisPtcl> wall_yp(Test, n_yp, O_yp);
-        InfinitePlane<ThisPtcl> wall_ym(Test, n_ym, O_ym);
-        InfinitePlane<ThisPtcl> wall_zp(Test, n_zp, O_zp);
-        InfinitePlane<ThisPtcl> wall_zm(Test, n_zm, O_zm);
+            InfinitePlane<ThisPtcl> wall_xp(Test, n_xp, O_xp, vel);
+            InfinitePlane<ThisPtcl> wall_xm(Test, n_xm, O_xm, vel);
+            InfinitePlane<ThisPtcl> wall_yp(Test, n_yp, O_yp, vel);
+            InfinitePlane<ThisPtcl> wall_ym(Test, n_ym, O_ym, vel);
+            InfinitePlane<ThisPtcl> wall_zp(Test, n_zp, O_zp, vel);
+            InfinitePlane<ThisPtcl> wall_zm(Test, n_zm, O_zm, vel);
         // 壁との接触点が y<=kYMin にある場合は、その壁力を無効化
         auto apply_wall = [&](ThisPtcl& ith, const PS::F64vec& n, const PS::F64vec& Oplane, InfinitePlane<ThisPtcl>& wall) {
             // 平面への相対位置ベクトル
@@ -148,7 +150,7 @@ class Problem {
             const PS::F64 sign = (dr * n < 0 ? -1.0 : 1.0);
             const PS::F64vec contact = ith.pos - sign * ith.rad * n;
             // 接触点が閾値以下なら、この壁からの力は与えない
-            if (contact.y <= kYMin) return;
+                if(contact.y <= kYMin + offset.y) return;
             // 壁力（反発・摩擦）を付与
             wall.setForce(ith);
         };
@@ -166,7 +168,7 @@ class Problem {
             wall_zm.setForce(ptcl[i]);
             */
             // y<=kYMin の領域では壁力を無効化
-            if (ptcl[i].pos.y + ptcl[i].rad <= kYMin) continue;
+                if (ptcl[i].pos.y >= kYMin + offset.y) continue;
             // 各壁に対して接触判定 + 力を適用
             apply_wall(ptcl[i], n_xp, O_xp, wall_xp);
             apply_wall(ptcl[i], n_xm, O_xm, wall_xm);
