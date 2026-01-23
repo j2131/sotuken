@@ -13,6 +13,7 @@ constexpr PS::F64 kVibrationOmega = 8.0 * M_PI;  // 4 Hz
 // constexpr PS::F64vec kVibrationAmp(0.0, 0.0, kBoxHalfZ*0.1);
 constexpr PS::F64vec kVibrationAmp(0.0, 0.0, 0.0);
 constexpr PS::F64 kBoxVolume = (2.0 * kBoxHalfX) * (2.0 * kBoxHalfY) * (2.0 * kBoxHalfZ);
+//constexpr PS::F64 kGravityTiltDeg = 0.0;
 constexpr PS::F64 kGravityTiltDeg = 10.0;
 constexpr PS::F64 kGravityTiltRad = kGravityTiltDeg * M_PI / 180.0;
 }  // namespace
@@ -26,9 +27,10 @@ class Problem {
         ptcl.setNumberOfParticleLocal(N);
         // sysinfo.end_time = 1.0;
         sysinfo.end_time = 100.0;
-        dinfo.setBoundaryCondition(PS::BOUNDARY_CONDITION_PERIODIC_XYZ);
-        dinfo.setPosRootDomain(PS::F64vec(-kBoxHalfX - 0.002, -kBoxHalfY - 0.002, -kBoxHalfZ - 0.002),
-                               PS::F64vec(kBoxHalfX + 0.002, kBoxHalfY + 0.002, kBoxHalfZ + 0.002));
+        dinfo.setBoundaryCondition(PS::BOUNDARY_CONDITION_OPEN);
+        //dinfo.setBoundaryCondition(PS::BOUNDARY_CONDITION_PERIODIC_XYZ);
+        //dinfo.setPosRootDomain(PS::F64vec(-kBoxHalfX - 0.002, -kBoxHalfY - 0.002, -kBoxHalfZ - 0.002),
+        //                       PS::F64vec(kBoxHalfX + 0.002, kBoxHalfY + 0.002, kBoxHalfZ + 0.002));
         if (PS::Comm::getRank() != 0) return;
         const PS::F64 rad_kind[3] = {0.001, 0.0005, 0.00025};  // 1 mm, 0.5 mm, 0.25 mm
         const PS::F64 x_min = -kBoxHalfX;
@@ -168,7 +170,7 @@ class Problem {
             wall_zm.setForce(ptcl[i]);
             */
             // y<=kYMin の領域では壁力を無効化
-                if (ptcl[i].pos.y >= kYMin + offset.y) continue;
+                if (ptcl[i].pos.y <= kYMin + offset.y) continue;
             // 各壁に対して接触判定 + 力を適用
             apply_wall(ptcl[i], n_xp, O_xp, wall_xp);
             apply_wall(ptcl[i], n_xm, O_xm, wall_xm);
